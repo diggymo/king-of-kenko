@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "HealthType" AS ENUM ('STEPS', 'DISTANCE_WALKING_RUNNING', 'ACTIVE_ENERGY_BURNED', 'BASAL_ENERGY_BURNED', 'SLEEP_IN_BED', 'SLEEP_REM', 'WORKOUT');
+
 -- CreateTable
 CREATE TABLE "Todo" (
     "id" TEXT NOT NULL,
@@ -18,6 +21,19 @@ CREATE TABLE "User" (
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Point" (
+    "id" TEXT NOT NULL,
+    "type" "HealthType" NOT NULL,
+    "dateFrom" TIMESTAMP(3) NOT NULL,
+    "dateTo" TIMESTAMP(3) NOT NULL,
+    "value" DOUBLE PRECISION NOT NULL,
+    "userId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Point_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE INDEX "Todo_createdById_createdAt_idx" ON "Todo"("createdById", "createdAt");
 
@@ -26,3 +42,6 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- AddForeignKey
 ALTER TABLE "Todo" ADD CONSTRAINT "Todo_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Point" ADD CONSTRAINT "Point_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

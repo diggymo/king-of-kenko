@@ -11,7 +11,7 @@ async function bootstrap() {
   const port = parseInt(process.env.PORT || '3000', 10);
 
   const app = await NestFactory.create(AppModule);
-
+  // app.useGlobalFilters(new ValidationExceptionsFilter());
   logger.log(`running on port: ${port}`);
   await setAppConfig(app).listen(port);
 }

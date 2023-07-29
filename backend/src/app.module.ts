@@ -5,6 +5,9 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { AppController } from './app.controller';
+import { HealthModule } from './health/health.module';
+import { APP_FILTER } from '@nestjs/core';
+import { AllExceptionsFilter } from './app.exception-filter';
 
 @Module({
   imports: [
@@ -16,6 +19,13 @@ import { AppController } from './app.controller';
     PrismaModule,
     AuthModule,
     UserModule,
+    HealthModule,
+  ],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
+    },
   ],
   controllers: [AppController],
 })

@@ -9,10 +9,10 @@ import { PrismaService } from './prisma.service';
   imports: [ConfigModule],
   providers: [
     PrismaService,
-    {
-      provide: APP_FILTER,
-      useClass: PrismaClientExceptionFilter,
-    },
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: PrismaClientExceptionFilter,
+    // },
   ],
   exports: [PrismaService],
 })

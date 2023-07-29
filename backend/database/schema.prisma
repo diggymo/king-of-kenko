@@ -13,22 +13,36 @@ model Todo {
   description String?
   createdAt   DateTime @default(now())
   createdBy   User     @relation(fields: [createdById], references: [id])
-  createdById      String   @db.VarChar(255)
+  createdById String   @db.VarChar(255)
 
   @@index([createdById, createdAt])
 }
 
 model User {
-  id       String @id @default(uuid())
-  email    String @unique @db.VarChar(255)
+  id       String  @id @default(uuid())
+  email    String  @unique @db.VarChar(255)
   password String
   Todo     Todo[]
+  Point    Point[]
 }
 
 enum HealthType {
+  STEPS
+  DISTANCE_WALKING_RUNNING
+  ACTIVE_ENERGY_BURNED
+  BASAL_ENERGY_BURNED
+  SLEEP_IN_BED
+  SLEEP_REM
+  WORKOUT
 }
 
-
 model Point {
-
+  id       String     @id @default(uuid())
+  type     HealthType
+  dateFrom DateTime
+  dateTo   DateTime
+  value    Float
+  user     User       @relation(fields: [userId], references: [id])
+  userId   String
+  createdAt DateTime
 }
