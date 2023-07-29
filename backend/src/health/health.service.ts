@@ -23,4 +23,8 @@ export class HealthService {
   findByPage(userId: User['id'], page: number) {
     return this.query.findByUserId(userId, 2, page * 2, { property: 'createdAt', order: 'desc' });
   }
+
+  findById(id: Point['id']) {
+    return this.query.findById(id);
+  }
 }
