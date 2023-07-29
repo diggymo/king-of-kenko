@@ -93,5 +93,7 @@ describe('HealthService', () => {
     // 全てのデータが取得されないこと（分割されること）
     // 順序が日時の降順であること
     expect(result).toStrictEqual([inputData[1], inputData[2]]);
+
+    expect(await service.findById(result[0].id)).toStrictEqual(inputData[1]);
   });
 });
