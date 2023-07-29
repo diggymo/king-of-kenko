@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15.2-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes: 
+      - $PWD/database/postgres:/var/lib/postgresql/data
+  # app:
+  #   build: .
+  #   platform: linux/amd64
+  #   ports:
+  #     - '3000:3000'
+  #   volumes: 
+  #     - $PWD/.env:/usr/src/app/.env

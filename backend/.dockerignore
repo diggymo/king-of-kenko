@@ -1,0 +1,11 @@
+/dist
+/node_modules
+
+# Postgresのデータ
+database/postgres
+
+# 秘匿情報
+.env
+
+# カバレッジ
+coverage
