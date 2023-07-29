@@ -1,4 +1,4 @@
-import { User } from '@prisma/client';
+import { Point, User } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { z } from 'zod';
@@ -19,6 +19,14 @@ export class HealthQuery {
       orderBy: sortObject,
       take: limit,
       skip: offset,
+    });
+  }
+
+  findById(id: Point['id']) {
+    return this.prismaService.point.findUniqueOrThrow({
+      where: {
+        id,
+      },
     });
   }
 }
