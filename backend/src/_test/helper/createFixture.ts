@@ -30,7 +30,7 @@ export const createPoints = async (prismaClient: PrismaClient, userId: User['id'
   const TYPES = [HealthType.ACTIVE_ENERGY_BURNED, HealthType.STEPS, HealthType.SLEEP_IN_BED];
 
   const points: Prisma.PointCreateManyInput[] = Array.from({ length: count }).map((_, i) => {
-    const dateFrom = new Date(2000 + Math.random() * 22, 1 + Math.random() * 11, 1 + Math.random() * 28);
+    const dateFrom = new Date(1900 + Math.random() * 122, 1 + Math.random() * 11, 1 + Math.random() * 28);
     return {
       userId,
       type: TYPES[i % 3],
