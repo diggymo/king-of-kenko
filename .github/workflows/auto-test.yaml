@@ -33,9 +33,10 @@ jobs:
       - run: yarn global add @nestjs/cli
       - run: yarn install --frozen-lockfile
       - run: yarn prisma generate
-      - run: yarn test --forceExit --collect-coverage || echo "#"
+      - run: yarn test --forceExit --collect-coverage
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
+        if: always()
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true

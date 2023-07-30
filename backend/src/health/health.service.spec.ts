@@ -6,7 +6,7 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { resetAllData } from 'src/_test/helper/resetAllDbData';
 import { createUser } from 'src/_test/helper/createFixture';
-import { HealthQuery } from './health.query';
+import { HealthRepository } from './health.repository';
 
 describe('HealthService', () => {
   let service: HealthService;
@@ -16,7 +16,7 @@ describe('HealthService', () => {
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [PrismaModule, ConfigModule],
-      providers: [HealthService, HealthQuery],
+      providers: [HealthService, HealthRepository],
     })
       // テスト用DBに切り替え
       .overrideProvider(PrismaService)
@@ -56,12 +56,32 @@ describe('HealthService', () => {
     expect(await prisma.point.findMany()).toMatchObject(inputDataList);
   });
 
+  it('create multi points without duplicates', async () => {
+    const dateFrom = new Date(2000, 1, 1);
+    const dateTo = new Date(2005, 1, 1);
+    const inputDataList = [
+      {
+        type: 'ACTIVE_ENERGY_BURNED' as const,
+        dateFrom: dateFrom,
+        dateTo: dateTo,
+        value: 0.1234567,
+      },
+    ];
+    await service.create(inputDataList, user.id);
+    await service.create(inputDataList, user.id);
+    await service.create(inputDataList, user.id);
+    await service.create(inputDataList, user.id);
+
+    // 重複なしで登録されるため1件のみ
+    expect(await prisma.point.count()).toEqual(1);
+  });
+
   it('fetch all data', async () => {
     const inputData = [
       {
         id: '1',
-        dateFrom: new Date(),
-        dateTo: new Date(),
+        dateFrom: new Date(2000, 1, 1),
+        dateTo: new Date(2000, 2, 1),
         type: 'SLEEP_IN_BED' as const,
         value: 12345.56788,
         createdAt: new Date(2000, 1, 1),
@@ -69,8 +89,8 @@ describe('HealthService', () => {
       },
       {
         id: '3',
-        dateFrom: new Date(),
-        dateTo: new Date(),
+        dateFrom: new Date(2000, 3, 1),
+        dateTo: new Date(2000, 4, 1),
         type: 'SLEEP_IN_BED' as const,
         value: 12345.56788,
         createdAt: new Date(),
@@ -78,8 +98,8 @@ describe('HealthService', () => {
       },
       {
         id: '2',
-        dateFrom: new Date(),
-        dateTo: new Date(),
+        dateFrom: new Date(2000, 5, 1),
+        dateTo: new Date(2000, 6, 1),
         type: 'SLEEP_IN_BED' as const,
         value: 12345.56788,
         createdAt: new Date(2005, 2, 2),
