@@ -8,6 +8,7 @@ import { AppController } from './app.controller';
 import { HealthModule } from './health/health.module';
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './app.exception-filter';
+import { RankingModule } from './ranking/ranking.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AllExceptionsFilter } from './app.exception-filter';
     PrismaModule,
     AuthModule,
     UserModule,
+    RankingModule,
     HealthModule,
   ],
   providers: [
