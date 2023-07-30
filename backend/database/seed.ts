@@ -10,7 +10,7 @@ const exec = async () => {
   const user1 = await createUser(prisma);
   const user2 = await createUser(prisma, 'marooon88+test1@gmail.com');
 
-  await createPoints(prisma, user2.id, 5000);
+  await createPoints(prisma, user2.id, 50);
 };
 
 exec()
