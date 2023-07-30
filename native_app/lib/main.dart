@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -164,10 +167,50 @@ class _MyAppState extends State<MyApp> {
     List<HealthDataPoint> _healthData = HealthFactory.removeDuplicates(
         await health.getHealthDataFromTypes(yesterday, now, dataTypes));
 
-    print(_healthData);
+    print("count is ${_healthData.length}");
 
     setState(() {
       healthData = HealthFactory.removeDuplicates(_healthData);
+    });
+
+    await sendPoints(healthData);
+  }
+
+  Future<http.Response> sendPoints(List<HealthDataPoint> points) {
+    final postBody = points
+        .map((e) => {
+              "value": double.parse(e.value.toString()),
+              "dateFrom": e.dateFrom.toUtc().toIso8601String(),
+              "dateTo": e.dateTo.toUtc().toIso8601String(),
+              "type": e.type.name
+            })
+        .toList();
+    return http
+        .post(
+      Uri.parse('http://192.168.10.102:3000/health/points'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Authorization":
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTc0N2ZlZS1hYWI2LTQ1ODktODc4ZC01N2JlMjZlMmI1ZDEiLCJpYXQiOjE2OTA2ODU2NDZ9.wkuvOFCpA92MqcHjsGhSt9Fk45hcejGYahkaun_mlMQ"
+      },
+      // body: jsonEncode(points.map((point) {
+      //   return {
+      //     "value": point.value.toString(),
+      //     "dateFrom": point.dateFrom,
+      //     "dateTo": point.dateTo,
+      //     "type": point.type
+      //   };
+      // })),
+      body: jsonEncode(postBody),
+    )
+        .then((value) {
+      print(value.statusCode);
+      if (value.body.isNotEmpty) {
+        print(jsonDecode(value.body));
+      } else {
+        print("NO_RESPONSE_BODY");
+      }
+      return value;
     });
   }
 }

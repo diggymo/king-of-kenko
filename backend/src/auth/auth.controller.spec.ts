@@ -7,6 +7,7 @@ import { User } from 'src/user/user.entity';
 import { createUser, TEST_USER_EMAIL, TEST_USER_PASSWORD } from 'src/_test/helper/createFixture';
 import { resetAllData } from 'src/_test/helper/resetAllDbData';
 import * as request from 'supertest';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 describe('AuthController', () => {
   let app: INestApplication;
@@ -21,7 +22,7 @@ describe('AuthController', () => {
       .useClass(PrismaTestService)
       .compile();
 
-    const _app = moduleRef.createNestApplication();
+    const _app = moduleRef.createNestApplication<NestExpressApplication>();
     app = setAppConfig(_app);
     await app.init();
     prisma = moduleRef.get<PrismaService>(PrismaService);

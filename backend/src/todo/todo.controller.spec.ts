@@ -8,6 +8,7 @@ import { User } from 'src/user/user.entity';
 import { createTodo, createUser } from 'src/_test/helper/createFixture';
 import { resetAllData } from 'src/_test/helper/resetAllDbData';
 import * as request from 'supertest';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 describe('TodoController', () => {
   let app: INestApplication;
@@ -24,7 +25,7 @@ describe('TodoController', () => {
       .useClass(PrismaTestService)
       .compile();
 
-    const _app = moduleRef.createNestApplication();
+    const _app = moduleRef.createNestApplication<NestExpressApplication>();
     app = setAppConfig(_app);
     await app.init();
     prisma = moduleRef.get<PrismaService>(PrismaService);
